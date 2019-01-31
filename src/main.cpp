@@ -9,7 +9,8 @@
 #define LED_TYPE    APA102
 #define COLOR_ORDER GRB
 
-#define CYCLE_SPEED 50
+#define CYCLE_SPEED 5
+
 struct CAR {
 	int8_t player;
 	float position;
@@ -19,7 +20,7 @@ struct CAR {
 };
 
 #define CAR_SIZE 7
-#define TRACK_SIZE 10
+#define TRACK_SIZE 50
 #define CAR_NUMBER 4
 // Define the array of leds
 CRGB leds[NUM_LEDS];
@@ -34,24 +35,28 @@ void setup() {
 	FastLED.setDither( 255 );
 
 	//Car Setup for Colours and Numbers
+	//Green
 	cars[0].position = 0;
 	cars[0].player = 1;
 	cars[0].colourH = 0;
 	cars[0].colourS = 255;
 	cars[0].colourV = 200;
 
+	//blue
 	cars[1].position = 0;
 	cars[1].player = 2;
 	cars[1].colourH = 96;
 	cars[1].colourS = 255;
 	cars[1].colourV = 200;
 	
+	//yellow
 	cars[2].position = 0;
 	cars[2].player = 3;
 	cars[2].colourH = 192;
 	cars[2].colourS = 255;
 	cars[2].colourV = 255;
 
+	//aqua
 	cars[3].position = 0;
 	cars[3].player = 4;
 	cars[3].colourH = 32;
@@ -101,26 +106,23 @@ void blankCars(int carNum){
 void race(){
 	int laps = 10;
 
-	while (cars[0].position < (laps * NUM_LEDS) || cars[1].position < (laps * NUM_LEDS) )
-	{
-		//display car 0
-		for(int i = 0; i < CAR_NUMBER; i++)	{
-			placeCar(i);	
-		}
+	//display car 0
+	for(int i = 0; i < CAR_NUMBER; i++)	{
+		placeCar(i);	
+	}
 
-		FastLED.show();
+	FastLED.show();
 
-		for(int i = 0; i < CAR_NUMBER; i++)	{
-			blankCars(i);	
-		}
+	for(int i = 0; i < CAR_NUMBER; i++)	{
+		blankCars(i);	
+	}
 
-		cars[0].position ++;
-		cars[1].position += 2;
-		cars[2].position += .5;
-		cars[3].position += 1.5;
+	cars[0].position += .3;
+	cars[1].position += .75;
+	cars[2].position += .25;
+	cars[3].position += .2;
 
 		delay(CYCLE_SPEED);
-	}
 }
 
 
