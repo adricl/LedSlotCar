@@ -43,7 +43,7 @@ void setup() {
   cars[0].colourH = 0;
   cars[0].colourS = 255;
   cars[0].colourV = 200;
-  cars[0].pin = -1; //normally 0
+  cars[0].pin = 4; //normally 0
   cars[0].crashTimer = 0;
   
   //blue
@@ -114,36 +114,50 @@ void renderNormalCar(CAR car, bool clear){
     }
 }
 
-void renderCrashedCar(CAR car, bool clear){
-  if (!clear && ((car.crashTimer % 5) == 0)) {
-    renderNormalCar(car, clear);
+void renderCrashedCar(int carNum, bool clear){
+  if (clear){
+    renderNormalCar(cars[carNum], clear);
   }
-  car.crashTimer --;
+  else if (((cars[carNum].crashTimer % 20) == 0) ) {
+    renderNormalCar(cars[carNum], clear);
+  }
+  else {
+    renderNormalCar(cars[carNum], true);
+  }
+  cars[carNum].crashTimer --;
 }
 
 void renderCar(int carNum, bool clear) {
-  CAR car = cars[carNum];
-
-  if (car.crashTimer > 0){
-    renderCrashedCar(car, clear);
+  if (cars[carNum].crashTimer > 0){
+    renderCrashedCar(carNum, clear);
   }
   else {
-    renderNormalCar(car, clear);
+    renderNormalCar(cars[carNum], clear);
   }
 }
 
-void updateCarPosition(int carNum, double updateAmount){
+void checkCrash(int carNum, double updateAmount){
+  int pos = getStripPos(cars[carNum].position);
+  if (pos > 60 && pos < 80 && updateAmount > .5){
+    cars[carNum].crashTimer = 50;
+  }
+}
+
+void updateCarPosition(int carNum, double updateAmount) {
   CAR car = cars[carNum];
   if (car.crashTimer > 0){
-    return;
+    updateAmount = .0001;
   } 
-  else if(car.pin > 0){
+  checkCrash(carNum, updateAmount);
+  
+  if(car.pin > 0){
     cars[carNum].position += (float)analogRead(car.pin)/1023;
   }
   else {
     cars[carNum].position += updateAmount;
   }
 }
+
 
 
 //Main race loop
